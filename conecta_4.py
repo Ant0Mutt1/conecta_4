@@ -1,4 +1,5 @@
 from os import system
+import platform
 class Game:
     def __init__(self) -> None:
         self.n_row = 6
@@ -7,8 +8,15 @@ class Game:
         self.disc_lacated = 0
         self.board = [['O' for _ in range(self.n_col)] for _ in range(self.n_row)] 
 
+    def clear_screen(self):
+        op_sys = platform.system()
+        if op_sys=='Linux':
+            system('clear')
+        elif op_sys == 'Windows':
+            system('cls')
+
     def show_board(self):
-        system('cls')
+        self.clear_screen()
         print('a  b  c  d  e  f  g')
         print()
         for row in self.board:
