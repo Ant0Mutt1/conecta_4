@@ -31,25 +31,32 @@ class Game:
 
     def check_winner(self, row, col, disc):
     
-        # Definir las directions en las que se verificará (horizontal, vertical, diagonal)
+        # Define las direcciones en las que se verificará (horizontal, vertical, diagonal)
         directions = [(0, 1), (1, 0), (1, 1), (1, -1)]
         
         for d in directions:
             count = 1
             
-            # Verificar en ambas directions (+d y -d)
+            # Verifica en ambas direcciones (+d y -d)
             for dir in [1, -1]:
+                # Cuanto se va a mover en el eje X y en el eje Y
                 dx = d[0] * dir
                 dy = d[1] * dir
 
+                # Indices de la celda que debe verificar
                 x = row + dx
                 y = col + dy
                 
+                # Controla que la celda a verificar no esté fuera de rango (0 a 6 en el eje x, 0 a 5 el eje y)
+                # y que el valor de la celda sea el mismo que el disco introducido
                 while 0 <= x < len(self.board) and 0 <= y < len(self.board[0]) and self.board[x][y] == disc:
                     count += 1
                     if count == 4:
                         print('ganador jugador', disc)
                         return True
+                    
+                    # Continua revisando las celdas en la dirección en la que encontró el siguiente disco
+                    # hasta que encuentre 4 discos iguales o encuentre una celda vacía
                     x += dx
                     y += dy
         print('no hay ganador')            
