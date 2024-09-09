@@ -57,8 +57,31 @@ class Game:
                     # iguales consecutivos o encuentre una celda vacía.
                     x += dx
                     y += dy
-        print('no hay ganador')            
+     
         return False
+    def check_immediate_threat(self):
+
+        for i, row in enumerate(self.board):
+            for j, disc in enumerate(row):
+                if disc == 'A':
+                    axis = [(0,1), (1,0), (1,1), (1,-1)]
+
+                    for d in axis:
+                        count = 1
+                        for dir in [1,2,3]:
+                            dx = d[0] * dir
+                            dy = d[1] * dir
+
+                            x = i + dx
+                            y = j + dy
+                            if 0 <= x < len(self.board) and 0 <= y < len(self.board[0]):
+                                if self.board[x][y] == 'A':
+                                    count +=1
+                                elif self.board[x][y] == 'B':
+                                    count -=1
+                        if count == 3:
+                            print('amenaza') 
+                            return                             
 
     def play(self):
         playing = True
@@ -72,9 +95,10 @@ class Game:
 
             if row >= 0 and self.board[row][col] == 'O':
                 self.board[row][col]=self.disc
+                self.check_immediate_threat()
                 self.show_board()
-                ganador = self.check_winner(row, col, self.disc)
-                if ganador:
+                winner = self.check_winner(row, col, self.disc)
+                if winner:
                     playing = False
                 self.shift_disc()
                 row = 5
