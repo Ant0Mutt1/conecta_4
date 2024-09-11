@@ -1,5 +1,7 @@
 from os import system
 import platform
+from random import randint
+import time
 class Game:
     def __init__(self) -> None:
         self.disc = 'A'
@@ -12,7 +14,7 @@ class Game:
         elif op_sys == 'Windows':
             system('cls')
 
-    def show_board(self):
+    def _show_board(self):
         # self.clear_screen()
         print('a  b  c  d  e  f  g')
         for row in self.board:
@@ -20,13 +22,13 @@ class Game:
                 print(cell, end="  ")
             print(end="\n")
 
-    def shift_disc(self):
+    def _shift_disc(self):
         if self.disc == 'A':
             self.disc = 'B'
         else:
             self.disc = 'A'
 
-    def check_winner(self, row, col, disc):
+    def _check_winner(self, row, col, disc):
         # Raliza una búsqueda de patrones en una matriz bidimensional
     
         # Define las direcciones en las que se verificará (horizontal, vertical, diagonal)
@@ -50,7 +52,7 @@ class Game:
                 while 0 <= x < len(self.board) and 0 <= y < len(self.board[0]) and self.board[x][y] == disc:
                     count += 1
                     if count == 4:
-                        print('ganador jugador', disc)
+                        print('ganador player', disc)
                         return True
                     
                     # Continua revisando las celdas en el mismo eje hasta que encuentre 4 discos 
@@ -59,7 +61,8 @@ class Game:
                     y += dy
      
         return False
-    def check_immediate_threat(self):
+    def _check_immediate_threat(self):
+        # TODO: mejora la deteccion en diagonales
 
         for i, row in enumerate(self.board):
             for j, disc in enumerate(row):
@@ -68,7 +71,7 @@ class Game:
 
                     for d in axis:
                         count = 1
-                        for dir in [1,2,3]:
+                        for dir in [-1,-2,-3]:
                             dx = d[0] * dir
                             dy = d[1] * dir
 
@@ -79,10 +82,48 @@ class Game:
                                     count +=1
                                 elif self.board[x][y] == 'B':
                                     count -=1
+                                else:
+                                    threat_col = y 
                         if count == 3:
-                            print('amenaza') 
-                            return                             
-
+                            return threat_col
+                                                                
+        return randint(0,6)
+    
+    def play_bot(self):
+        player = 'human'
+        playing = True
+        row = 5
+        disc_in_game = False
+        while playing:
+            # Controla si ya se introdujo el disco
+            if player == 'human':
+                if not disc_in_game:
+                    col= int(input('columna: '))
+                disc_in_game = True
+            else:
+                print(self.disc)
+                col = self._check_immediate_threat()
+            
+            if row >= 0 and self.board[row][col] == 'O':
+                self.board[row][col]=self.disc
+                self._show_board()
+                winner = self._check_winner(row, col, self.disc)
+                if winner:
+                    playing = False
+                self._shift_disc()    
+                row = 5
+                disc_in_game = False
+            elif row < 0:
+                row = 5
+                disc_in_game = False
+            elif not self.board[row][col] == 'O':
+                row -= 1 
+                continue
+            player = 'bot' if player == 'human' else 'human'
+            time.sleep(1)
+            
+        return True
+    
     def play(self):
         playing = True
         row = 5
@@ -95,12 +136,11 @@ class Game:
 
             if row >= 0 and self.board[row][col] == 'O':
                 self.board[row][col]=self.disc
-                self.check_immediate_threat()
-                self.show_board()
-                winner = self.check_winner(row, col, self.disc)
+                self._show_board()
+                winner = self._check_winner(row, col, self.disc)
                 if winner:
                     playing = False
-                self.shift_disc()
+                self._shift_disc()
                 row = 5
                 disc_in_game = False
             elif row < 0:
@@ -114,4 +154,4 @@ class Game:
 
 if __name__ == '__main__':
     game = Game()
-    game.play()
+    game.play_bot()
