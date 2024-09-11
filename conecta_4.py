@@ -15,7 +15,7 @@ class Game:
             system('cls')
 
     def _show_board(self):
-        # self.clear_screen()
+        self.clear_screen()
         print('a  b  c  d  e  f  g')
         for row in self.board:
             for cell in row:
@@ -88,70 +88,36 @@ class Game:
                             return threat_col
                                                                 
         return randint(0,6)
-    
-    def play_bot(self):
-        player = 'human'
-        playing = True
+    def _find_lower_position(self, col):
         row = 5
-        disc_in_game = False
-        while playing:
-            # Controla si ya se introdujo el disco
-            if player == 'human':
-                if not disc_in_game:
-                    col= int(input('columna: '))
-                disc_in_game = True
-            else:
-                print(self.disc)
-                col = self._check_immediate_threat()
-            
-            if row >= 0 and self.board[row][col] == 'O':
-                self.board[row][col]=self.disc
-                self._show_board()
-                winner = self._check_winner(row, col, self.disc)
-                if winner:
-                    playing = False
-                self._shift_disc()    
-                row = 5
-                disc_in_game = False
-            elif row < 0:
-                row = 5
-                disc_in_game = False
-            elif not self.board[row][col] == 'O':
-                row -= 1 
-                continue
-            player = 'bot' if player == 'human' else 'human'
-            time.sleep(1)
-            
-        return True
-    
-    def play(self):
+        while True: 
+            if self.board[row][col]=='O':
+                return row
+            row -= 1
+
+    def play(self, bot=True):
+        player = 'bot'
         playing = True
-        row = 5
-        disc_in_game = False
         while playing:
-            # Controla si ya se introdujo el disco
-            if not disc_in_game:
+            if bot == False or player == 'human':
                 col= int(input('columna: '))
-            disc_in_game = True
 
-            if row >= 0 and self.board[row][col] == 'O':
-                self.board[row][col]=self.disc
-                self._show_board()
-                winner = self._check_winner(row, col, self.disc)
-                if winner:
-                    playing = False
-                self._shift_disc()
-                row = 5
-                disc_in_game = False
-            elif row < 0:
-                row = 5
-                disc_in_game = False
-            elif not self.board[row][col] == 'O':
-                row -= 1 
-                
+            elif bot == True and player == 'bot':
+                col = self._check_immediate_threat()
 
+            row = self._find_lower_position(col)
+            self.board[row][col]=self.disc
+            self._show_board()
+            winner = self._check_winner(row, col, self.disc)
+            if winner:
+                playing = False
+            self._shift_disc()    
+            player = 'human' if player == 'bot' else 'bot'
+            if bot == True:
+                time.sleep(1)
+            
         return True
-
+    
 if __name__ == '__main__':
     game = Game()
-    game.play_bot()
+    game.play(bot= False)
