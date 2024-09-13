@@ -15,7 +15,7 @@ class Game:
             system('cls')
 
     def _show_board(self):
-        self.clear_screen()
+        # self.clear_screen()
         print('a  b  c  d  e  f  g')
         for row in self.board:
             for cell in row:
@@ -61,33 +61,44 @@ class Game:
                     y += dy
      
         return False
+    def _find_col(self, disc, i_row, i_col):
+        if disc == 'B':
+            axis = [(0,1), (1,0), (1,1), (1,-1)]
+
+            for d in axis:
+
+                direc = [[1,2,3],[-1,-2,-3]]
+                for dirs in direc:
+                    values = []
+                    for dir in dirs:
+                        dx = d[0] * dir
+                        dy = d[1] * dir
+
+                        x = i_row + dx
+                        y = i_col + dy
+                        if 0 <= x < len(self.board) and 0 <= y < len(self.board[0]):
+                            values.append(self.board[x][y])
+
+                            if self.board[x][y]=='O':
+                                print(y)
+                                col = y
+                    if len(values) == 3 and values.count('B') == 2 and values.count('O')==1:
+                        # Le suma 1 a la columna porque 0 es igual a False. el 
+                        # metodo que lo utilice deberá restarle 1
+                        return col +1            
+                    
+        return False
+         
     def _check_immediate_threat(self):
         # TODO: mejora la deteccion en diagonales
 
-        for i, row in enumerate(self.board):
-            for j, disc in enumerate(row):
-                if disc == 'A':
-                    axis = [(0,1), (1,0), (1,1), (1,-1)]
-
-                    for d in axis:
-                        count = 1
-                        for dir in [-1,-2,-3]:
-                            dx = d[0] * dir
-                            dy = d[1] * dir
-
-                            x = i + dx
-                            y = j + dy
-                            if 0 <= x < len(self.board) and 0 <= y < len(self.board[0]):
-                                if self.board[x][y] == 'A':
-                                    count +=1
-                                elif self.board[x][y] == 'B':
-                                    count -=1
-                                else:
-                                    threat_col = y 
-                        if count == 3:
-                            return threat_col
-                                                                
+        for i_row, row in enumerate(self.board):
+            for i_col, disc in enumerate(row):
+               col = self._find_col(disc, i_row, i_col)
+               if col:
+                   return col-1                                              
         return randint(0,6)
+    
     def _find_lower_position(self, col):
         row = 5
         while True: 
@@ -120,4 +131,4 @@ class Game:
     
 if __name__ == '__main__':
     game = Game()
-    game.play(bot= False)
+    game.play()
