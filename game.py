@@ -9,12 +9,16 @@ def play():
     board = np.zeros((ROWS, COLS))
     playing = True
     while playing:
-        col = int(input('columna: '))
-        row = find_lower_position(board, col)
-        board[row][col] = HUMAN
-        for line in board:
-            print(line)
-        print()
+        try:
+            col = int(input('column: '))
+            row = find_lower_position(board, col)
+            board[row][col] = HUMAN
+            for line in board:
+                print(line)
+            print()
+        except: 
+            print('Invalid movement. Try again')
+            continue
 
         board = best_move(board)[1]
         for line in board:
@@ -23,10 +27,10 @@ def play():
 
         winner = evaluate(board)
         if winner == -1:
-            print('¡Ganaste!')
+            print('You have won!')
             playing = False
         elif winner == 1:
-            print('¡Ganó el bot!')
+            print('You have lost!')
             playing = False
 
     return True
