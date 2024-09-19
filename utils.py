@@ -1,5 +1,3 @@
-# utils.py
-import numpy as np
 from constants import EMPTY, HUMAN, BOT, COLS, ROWS
 
 def find_lower_position(state, col):

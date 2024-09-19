@@ -1,4 +1,3 @@
-# constants.py
 HUMAN = 1
 BOT = 2
 EMPTY = 0

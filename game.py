@@ -1,12 +1,19 @@
-# game.py
 import numpy as np
-from constants import HUMAN, ROWS, COLS
+from constants import HUMAN
 from utils import find_lower_position
 from minimax import best_move
 from evaluation import evaluate
 
 def play():
-    board = np.zeros((ROWS, COLS))
+    board = np.array([
+                        [0,0,0,0,0,0,0],
+                        [0,0,0,0,0,0,0],
+                        [0,0,0,0,0,0,0],
+                        [0,0,0,0,0,0,0],
+                        [0,0,0,0,0,0,0],
+                        [0,0,0,0,0,0,0],
+
+                    ])
     playing = True
     while playing:
         try:
@@ -26,10 +33,11 @@ def play():
         print()
 
         winner = evaluate(board)
-        if winner == -1:
+        print(winner)
+        if winner == -100:
             print('You have won!')
             playing = False
-        elif winner == 1:
+        elif winner == 100:
             print('You have lost!')
             playing = False
 

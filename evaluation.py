@@ -1,4 +1,3 @@
-# evaluation.py
 from constants import HUMAN, BOT, EMPTY, COLS, ROWS, FOUR_CONNECTED
 
 def check_four_connected(state, player):
@@ -49,14 +48,14 @@ def check_board(state, player):
 
     # Puntuación horizontal
     for r in range(ROWS):
-        row_array = [int(i) for i in list(state[r, :])]
+        row_array = [i for i in list(state[r, :])]
         for c in range(COLS - 3):
             window = row_array[c:c + FOUR_CONNECTED]
             score += check_window(window, player)
 
     # Puntuación vertical
     for c in range(COLS):
-        column_array = [int(i) for i in list(state[:, c])]
+        column_array = [i for i in list(state[:, c])]
         for r in range(ROWS - 3):
             window = column_array[r:r + FOUR_CONNECTED]
             score += check_window(window, player)
@@ -77,14 +76,16 @@ def check_board(state, player):
 
 def evaluate(state):
     score = 0
-    for row in range(ROWS):
-        for col in range(COLS):
-            if state[row][col] == HUMAN:
-                score -= check_board(state, HUMAN)
-            elif state[row][col] == BOT:
-                score += check_board(state, BOT)
+
+    # Evaluar la puntuación global del tablero
+    score += check_board(state, BOT)   # Puntuación para el BOT
+    score -= check_board(state, HUMAN)  # Puntuación para el HUMANO
+
+    # Comprobar si hay una victoria
     if check_four_connected(state, BOT):
-        return 1
+        return 100  # Victoria para BOT
     elif check_four_connected(state, HUMAN):
-        return -1
+        return -100  # Victoria para HUMANO
+    if all(state[r][c] != EMPTY for r in range(ROWS) for c in range(COLS)):
+            return 0  # Empate
     return score
