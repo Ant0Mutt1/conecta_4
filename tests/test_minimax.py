@@ -1,35 +1,99 @@
 import unittest
 import numpy as np
 from minimax import minimax, best_move
-from constants import HUMAN, BOT
+from constants import HUMAN, BOT, EMPTY
 
-class TestMinimax(unittest.TestCase):
+class TestBestMove(unittest.TestCase):
 
-    def test_best_move(self):
-   
-        board = np.zeros((6, 7))
+    def test_best_move_vertical_win(self):
 
-        board[5][0:3] = HUMAN
+        board = np.array([
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 2, 0, 0, 0],
+            [0, 0, 0, 2, 0, 0, 0],
+            [0, 0, 0, 2, 0, 0, 0]
+        ])
 
-        score, new_state = best_move(board)
+        _, new_state = best_move(board)
 
-        self.assertIsNotNone(new_state)
-        self.assertNotEqual(board.tolist(), new_state.tolist())
+        expected_state = board.copy()
+        expected_state[2][3] = BOT
 
-    def test_best_win_move(self):
-        board = np.zeros((6, 7))
-        
-        board[3:,2] = HUMAN
-        board[3:,0] = BOT
+        self.assertEqual(new_state.tolist(), expected_state.tolist())
 
-        score, new_state = best_move(board)
-        print(new_state)
+    def test_best_move_horizontal_win(self):
 
-        output_board = board.copy()
-        output_board[2][0] = BOT
+        board = np.array([
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [2, 2, 2, 0, 0, 0, 0]
+        ])
 
-        self.assertEqual(best_move(board)[1].tolist(), output_board.tolist())
+        _, new_state = best_move(board)
 
+        expected_state = board.copy()
+        expected_state[5][3] = BOT
+
+        self.assertEqual(new_state.tolist(), expected_state.tolist())
+
+    def test_block_opponent_win(self):
+
+        board = np.array([
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [1, 1, 1, 0, 0, 0, 0]
+        ])
+
+        _, new_state = best_move(board)
+
+        expected_state = board.copy()
+        expected_state[5][3] = BOT
+
+        self.assertEqual(new_state.tolist(), expected_state.tolist())
+
+    def test_best_move_diagonal_win(self):
+
+        board = np.array([
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0, 0, 0],
+            [0, 1, 2, 1, 0, 0, 0],
+            [0, 2, 2, 1, 0, 0, 0],
+            [2, 1, 1, 2, 0, 0, 0]
+        ])
+
+        _, new_state = best_move(board)
+
+        expected_state = board.copy()
+        expected_state[2][3] = BOT
+
+        self.assertEqual(new_state.tolist(), expected_state.tolist())
+
+    def test_block_diagonal_opponent(self):
+
+        board = np.array([
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 2, 0, 0, 0, 0],
+            [0, 0, 1, 2, 0, 0, 0],
+            [0, 1, 1, 2, 0, 0, 0],
+            [1, 1, 2, 1, 0, 0, 0]
+        ])
+
+        _, new_state = best_move(board)
+
+        expected_state = board.copy()
+        expected_state[2][3] = BOT
+
+        self.assertEqual(new_state.tolist(), expected_state.tolist())
 
 if __name__ == '__main__':
     unittest.main()
