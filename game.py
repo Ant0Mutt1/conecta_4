@@ -6,18 +6,20 @@ from evaluation import evaluate
 
 def play():
     board = np.array([
-                        [0,0,0,0,0,0,0],
-                        [0,0,0,0,0,0,0],
-                        [0,0,0,0,0,0,0],
-                        [0,0,0,0,0,0,0],
-                        [0,0,0,0,0,0,0],
-                        [0,0,0,0,0,0,0],
-
-                    ])
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0]
+       ])
     playing = True
     while playing:
+        col = input('column (0-6): ')
         try:
-            col = int(input('column: '))
+            if col == 'q':
+                break
+            col = int(col)
             row = find_lower_position(board, col)
             board[row][col] = HUMAN
             for line in board:
@@ -33,7 +35,6 @@ def play():
         print()
 
         winner = evaluate(board)
-        print(winner)
         if winner == -100:
             print('You have won!')
             playing = False
