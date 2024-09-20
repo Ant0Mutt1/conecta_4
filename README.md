@@ -26,3 +26,5 @@ El juego se desarrolla en la terminal, donde el jugador selecciona una columna p
 1. El juego te pedirá que ingreses el número de la columna (del 0 al 6) en la que deseas colocar tu ficha.
 2. Después de cada turno, el bot hará su movimiento y se mostrará el tablero actualizado.
 3. El juego termina cuando uno de los jugadores consigue alinear 4 fichas (horizontal, vertical o diagonalmente).
+4. Opciones especiales:
+    Si el jugador ingresa 'q', el juego se terminará inmediatamente.
